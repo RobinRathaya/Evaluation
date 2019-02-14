@@ -57,5 +57,16 @@ public class Validator {
 			throw new Exception("Employee name not available");
 		}
 	}
+
+	public static void validateEmail(String email) throws Exception {
+		// TODO Auto-generated method stub
+		if(!email.matches("^[a-z]+(?:\\.[a-z]+)*@chainsys.com$"))
+				throw new Exception("invalid input");
+	}
+
+
 	
-}
+	
+	
+}	
+

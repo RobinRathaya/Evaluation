@@ -11,7 +11,7 @@ public class ConnectionUtil {
 		Connection connection=null;
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@localhost:1521:xe";
+			String url = "jdbc:oracle:thin:@192.168.54.163:1521:xe";
 			connection = DriverManager
 					.getConnection(url, "hr", "hr");
 			

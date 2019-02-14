@@ -29,7 +29,7 @@ public class User {
 	}
 
 	
-	private static void login(Scanner scanner) {
+	private static void login(Scanner scanner) throws Exception {
 		// TODO Auto-generated method stub
 		Employee employee=new Employee();
 		
@@ -39,9 +39,18 @@ public class User {
 		
 		System.out.println("Enter Password");
 		String password=scanner.next();
-		employee.setEmail(password);
+		employee.setPassword(password);
 		
-		Functionalites.login(employee);
+		boolean isFound=Functionalites.login(employee);
+		
+		if(isFound)
+		{
+			System.out.println("successfull");
+		}
+		else
+		{
+			System.out.println("unsuccessfull");
+		}
 	}
 
 
@@ -59,18 +68,20 @@ public class User {
 		
 		System.out.println("Enter the Email");
 		String email=scanner.next();
+		Validator.validateEmail(email);
 		employee.setName(email);
 		
 		System.out.println("Enter the password");
 		String password=scanner.next();
 		employee.setName(password);
 		
+		
 		Functionalites.addEmployee(employee);
 		
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Scanner scanner = new Scanner(System.in);
 		choice(scanner);

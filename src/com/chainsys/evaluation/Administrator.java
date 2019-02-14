@@ -9,45 +9,14 @@ public class Administrator {
 
 		char select;
 		do {
-			System.out.println("Choose from the action");
-			System.out.println("1.Insert new department");
-			System.out.println("2.Add Employees");
-			System.out.println("3.Delete Employees");
-			System.out.println("4.Search Employee");
-			System.out.println("5.Display");
-			System.out.println("6.Generate Report");
-			int option = scanner.nextInt();
-			switch (option) {
-			case 1:
-				addDepartment(scanner);
-				break;
-			case 2:
-				addEmployee(scanner);
-				break;
-			case 3:
-				delete(scanner);
-				break;
-			case 4:
-				search(scanner);
-				break;
-			case 5:
-			{
-				
-				ArrayList<Employee> employeeList=Functionalites.findAll();
-				Functionalites.displayAll(employeeList);
-				choice(scanner);
-			}
-				break;
-//			case 6:
-//				GenerateReport()
-			default:
-				System.out.println("Invalid input");
-				break;
-			}
+			
+			System.out.println("Insert new Topic");
+			
+			
 			select = scanner.next().charAt(0);
 		} while (select == 'y' || select == 'Y');
 
-		choice(scanner);
+		
 	}
 
 	/*private static void update(Scanner scanner) {
