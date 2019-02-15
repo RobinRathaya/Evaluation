@@ -1,90 +1,112 @@
 package com.chainsys.evaluation;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class User {
-	public static void choice(Scanner scanner) throws Exception {
 
+	public static EmployeeTopics selection(Scanner scanner, Employee employee) {
+
+		EmployeeTopics employeeTopics = null;
+		System.out.println("Enter the topic name");
+		String topicName = scanner.next();
+
+		System.out.println("Select from the status");
+		System.out.println("1.Not yet started ");
+		System.out.println("2.Beginner");
+		System.out.println("3.Intermediate");
+		System.out.println("4.Expert");
+		employeeTopics=new EmployeeTopics();
+		employeeTopics.topic = new Topics();
+		employeeTopics.status = new Status();
+		employeeTopics.employee = new Employee();
+		char statusOption = scanner.next().charAt(0);
+		switch (statusOption) {
+		
+		case 1: {
+			employeeTopics.employee.setId(employee.getId());
+			employeeTopics.topic.setName(topicName);
+			employeeTopics.status.setId(1);
+			LocalDateTime localDateTime = LocalDateTime.now();
+			employeeTopics.setCreatedOn(localDateTime);
+			employeeTopics.setUpdatedOn(null);
+		}
+			break;
+
+		case 2: {
+			employeeTopics.employee.setId(employee.getId());
+			employeeTopics.topic.setName(topicName);
+			employeeTopics.status.setId(2);
+			LocalDateTime localDateTime = LocalDateTime.now();
+			employeeTopics.setCreatedOn(localDateTime);
+			employeeTopics.setUpdatedOn(null);
+
+		}
+			break;
+		case 3: {
+			employeeTopics.employee.setId(employee.getId());
+			employeeTopics.topic.setName(topicName);
+			employeeTopics.status.setId(3);
+			LocalDateTime localDateTime = LocalDateTime.now();
+			employeeTopics.setCreatedOn(localDateTime);
+			employeeTopics.setUpdatedOn(null);
+
+		}
+			break;
+		case 4: {
+			employeeTopics.employee.setId(employee.getId());
+			employeeTopics.topic.setName(topicName);
+			employeeTopics.status.setId(4);
+			LocalDateTime localDateTime = LocalDateTime.now();
+			employeeTopics.setCreatedOn(localDateTime);
+			employeeTopics.setUpdatedOn(null);
+
+		}
+			break;
+
+		}
+		return employeeTopics;
+	}
+
+	public static void choice(Scanner scanner, Employee employee)
+			throws Exception {
 		char select;
 		do {
-			System.out.println("Choose from the action");
-			System.out.println("1.Sign up");
-			System.out.println("2.Login");
+			System.out.println("1.Dispaly Topics");
+			System.out.println("2.New status");
+			System.out.println("3.Update status");
+
 			int option = scanner.nextInt();
+
 			switch (option) {
-			case 1:
-				registerDetails(scanner);
-				break;
-			case 2:
-				login(scanner);
-				break;
-			default:
-				System.out.println("Invalid input");
-				break;
+			case 1: {
+				ArrayList<Topics> topicList = new ArrayList<>();
+				topicList = Functionalites.findTopics();
+				Functionalites.displayTopics(topicList);
 			}
+				break;
+			case 2: {
+				EmployeeTopics employeeTopics = selection(scanner, employee);
+				Functionalites.newStatus(employeeTopics);
+			}
+				break;
+			case 3: {
+				EmployeeTopics employeeTopics=selection(scanner, employee);
+				LocalDateTime localDateTime=LocalDateTime.now();
+				employeeTopics.setUpdatedOn(localDateTime);
+				Functionalites.updateStatus(employeeTopics);
+			}
+
+			}
+			System.out.println("Do you want continue (Y/y)");
 			select = scanner.next().charAt(0);
 		} while (select == 'y' || select == 'Y');
-
-		choice(scanner);
+		choice(scanner, employee);
 	}
 
-	
-	private static void login(Scanner scanner) throws Exception {
-		// TODO Auto-generated method stub
-		Employee employee=new Employee();
-		
-		System.out.println("Enter Email");
-		String email=scanner.next();
-		employee.setEmail(email);
-		
-		System.out.println("Enter Password");
-		String password=scanner.next();
-		employee.setPassword(password);
-		
-		boolean isFound=Functionalites.login(employee);
-		
-		if(isFound)
-		{
-			System.out.println("successfull");
-		}
-		else
-		{
-			System.out.println("unsuccessfull");
-		}
-	}
-
-
-	private static void registerDetails(Scanner scanner) throws Exception {
-		// TODO Auto-generated method stub
-		Employee employee =new Employee();
-		
-		System.out.println("Enter employee ID");
-		int id =scanner.nextInt();
-		employee.setId(id);
-		
-		System.out.println("Enter the Name");
-		String name=scanner.next();
-		employee.setName(name);
-		
-		System.out.println("Enter the Email");
-		String email=scanner.next();
-		Validator.validateEmail(email);
-		employee.setName(email);
-		
-		System.out.println("Enter the password");
-		String password=scanner.next();
-		employee.setName(password);
-		
-		
-		Functionalites.addEmployee(employee);
-		
-	}
-
-
-	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		Scanner scanner = new Scanner(System.in);
-		choice(scanner);
+	public static void main(String[] args) {
+		System.out.println("Thanks for using");
 	}
 
 }
