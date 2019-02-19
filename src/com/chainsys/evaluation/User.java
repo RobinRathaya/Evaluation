@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class User {
 
-	public static EmployeeTopics selection(Scanner scanner, Employee employee) {
+	public static EmployeeTopics selection(Scanner scanner, Employee employee)
+			throws Exception {
 
 		EmployeeTopics employeeTopics = null;
 		System.out.println("Enter the topic name");
@@ -17,13 +18,13 @@ public class User {
 		System.out.println("2.Beginner");
 		System.out.println("3.Intermediate");
 		System.out.println("4.Expert");
-		employeeTopics=new EmployeeTopics();
+		employeeTopics = new EmployeeTopics();
 		employeeTopics.topic = new Topics();
 		employeeTopics.status = new Status();
 		employeeTopics.employee = new Employee();
-		char statusOption = scanner.next().charAt(0);
+		int statusOption = scanner.nextInt();
 		switch (statusOption) {
-		
+
 		case 1: {
 			employeeTopics.employee.setId(employee.getId());
 			employeeTopics.topic.setName(topicName);
@@ -31,9 +32,9 @@ public class User {
 			LocalDateTime localDateTime = LocalDateTime.now();
 			employeeTopics.setCreatedOn(localDateTime);
 			employeeTopics.setUpdatedOn(null);
+
 		}
 			break;
-
 		case 2: {
 			employeeTopics.employee.setId(employee.getId());
 			employeeTopics.topic.setName(topicName);
@@ -41,16 +42,15 @@ public class User {
 			LocalDateTime localDateTime = LocalDateTime.now();
 			employeeTopics.setCreatedOn(localDateTime);
 			employeeTopics.setUpdatedOn(null);
+			return employeeTopics;
 
 		}
-			break;
 		case 3: {
 			employeeTopics.employee.setId(employee.getId());
 			employeeTopics.topic.setName(topicName);
 			employeeTopics.status.setId(3);
 			LocalDateTime localDateTime = LocalDateTime.now();
 			employeeTopics.setCreatedOn(localDateTime);
-			employeeTopics.setUpdatedOn(null);
 
 		}
 			break;
@@ -61,19 +61,20 @@ public class User {
 			LocalDateTime localDateTime = LocalDateTime.now();
 			employeeTopics.setCreatedOn(localDateTime);
 			employeeTopics.setUpdatedOn(null);
+			
 
 		}
 			break;
-
 		}
 		return employeeTopics;
 	}
 
 	public static void choice(Scanner scanner, Employee employee)
 			throws Exception {
+
 		char select;
 		do {
-			System.out.println("1.Dispaly Topics");
+			System.out.println("1.Display Topics");
 			System.out.println("2.New status");
 			System.out.println("3.Update status");
 
@@ -88,12 +89,13 @@ public class User {
 				break;
 			case 2: {
 				EmployeeTopics employeeTopics = selection(scanner, employee);
+
 				Functionalites.newStatus(employeeTopics);
 			}
 				break;
 			case 3: {
-				EmployeeTopics employeeTopics=selection(scanner, employee);
-				LocalDateTime localDateTime=LocalDateTime.now();
+				EmployeeTopics employeeTopics = selection(scanner, employee);
+				LocalDateTime localDateTime = LocalDateTime.now();
 				employeeTopics.setUpdatedOn(localDateTime);
 				Functionalites.updateStatus(employeeTopics);
 			}

@@ -10,10 +10,10 @@ public class ConnectionUtil {
 	public static Connection getConnection() throws Exception {
 		Connection connection=null;
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			String url = "jdbc:oracle:thin:@192.168.54.163:1521:xe";
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://13.126.90.207:3306/chainsys_team2_db";
 			connection = DriverManager
-					.getConnection(url, "hr", "hr");
+					.getConnection(url, "chainsys_team2", "chainsys_team2");
 			
 
 		} catch (ClassNotFoundException | SQLException e) {

@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Administrator {
+	
+	public static void call() throws Exception {
+		// TODO Auto-generated method stub
+		main(null);
+	}
 
 	public static void choice(Scanner scanner) throws Exception {
-
+		
 		char select;
 		do {
 			System.out.println("1.Insert new Topic");
@@ -18,6 +23,7 @@ public class Administrator {
 
 			switch (option) {
 			case 1: {
+				
 				Topics topic = new Topics();
 				System.out.println("Enter the topic name");
 				String topicName = scanner.next();
@@ -64,9 +70,12 @@ public class Administrator {
 	public static void main(String[] args) throws Exception {
 
 		Scanner scanner = new Scanner(System.in);
-		choice(scanner);	
+		
+		choice(scanner);
 		System.out.println("Thanks for using");
 
 	}
+
+	
 
 }

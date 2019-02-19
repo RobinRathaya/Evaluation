@@ -1,6 +1,5 @@
 package com.chainsys.evaluation;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,14 +7,13 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-
 public class Functionalites {
 
 	public static void deleteTopic(Topics topic) throws Exception {
 
 		try {
 			Connection connection = ConnectionUtil.getConnection();
-			String sql = "DELETE FROM ev_topics WHERE name=?";
+			String sql = "DELETE FROM EV_TOPICS WHERE name=?";
 			PreparedStatement preparedStatement = connection
 					.prepareStatement(sql);
 			preparedStatement.setString(1, topic.getName());
@@ -31,7 +29,7 @@ public class Functionalites {
 
 	public static Employee getDetails(Employee employee) throws Exception {
 
-		String sql = "SELECT id FROM ev_employee WHERE name= ? ";
+		String sql = "SELECT id FROM EV_EMPLOYEE WHERE name= ? ";
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
@@ -55,45 +53,9 @@ public class Functionalites {
 
 	}
 
-	// public static Employee searchByName(String name) throws Exception {
-	// Employee employee = null;
-	// String sql =
-	// "SELECT EMPLOYEE_ID,FIRST_NAME,LAST_NAME,PHONE_NUMBER,HIRE_DATE,JOB_ID,SALARY,MANAGER_ID ,DEPARTMENT_ID,DATE_OF_BIRTH,GENDER FROM CHAINSYS_EMPLOYEE WHERE first_name =? ";
-	// try {
-	// Connection connection = ConnectionUtil.getConnection();
-	// PreparedStatement preparedStatement = connection
-	// .prepareStatement(sql);
-	//
-	// preparedStatement.setString(1, name);
-	//
-	// ResultSet resultSet = preparedStatement.executeQuery();
-	// while (resultSet.next()) {
-	// employee = new Employee();
-	// employee.setId(resultSet.getInt("employee_id"));
-	// employee.setFirstName(resultSet.getString("first_name"));
-	//
-	// employee.setLastName(resultSet.getString("last_name"));
-	// employee.setPhoneNumber(resultSet.getLong("phone_number"));
-	// employee.setHireDate(resultSet.getDate("hire_date").toLocalDate());
-	// employee.setJobId(resultSet.getString("job_id"));
-	// employee.setSalary(resultSet.getFloat("salary"));
-	// employee.setManagerId(resultSet.getInt("manager_id"));
-	// employee.setDeptId(resultSet.getInt("department_id"));
-	// employee.setDateOfBirth(resultSet.getDate("DATE_OF_BIRTH").toLocalDate());
-	// employee.setGender(resultSet.getString("gender"));
-	// }
-	// return employee;
-	//
-	// } catch (SQLException e) {
-	// e.printStackTrace();
-	// throw new Exception("Unable to search");
-	// }
-	//
-	// }
-
 	public static Employee login(Employee employee) throws Exception {
 		ResultSet resultSet = null;
-		String sql = "SELECT empid,name,email,password FROM ev_employee WHERE email= ? AND password=? ";
+		String sql = "SELECT id,name,email,password FROM EV_EMPLOYEE WHERE email= ? AND password=? ";
 		Employee employeeDetails = null;
 		try {
 			Connection connection = ConnectionUtil.getConnection();
@@ -102,20 +64,36 @@ public class Functionalites {
 
 			preparedStatement.setString(1, employee.getEmail());
 			preparedStatement.setString(2, employee.getPassword());
-			
+
 			resultSet = preparedStatement.executeQuery();
 			employeeDetails = new Employee();
-			
-			
-			if (resultSet == null) {
-			System.out.println("account not found");
-				
-			}
-			else
-			{
-				System.out.println(resultSet.getInt("empid"));
-				System.out.println(resultSet.getString("name"));
-				
+
+			if (resultSet.next()) {
+				employeeDetails.setId(resultSet.getInt("id"));
+				employeeDetails.setName(resultSet.getString("name"));
+
+				if (resultSet.getString("email").equals(
+						"admin1523@chainsys.com")
+						&& resultSet.getString("password").equals("Admin@1234")) {
+					Administrator.call();
+				} else if (resultSet.getString("email").equals(
+						"admin1523@chainsys.com")
+						&& !resultSet.getString("password")
+								.equals("Admin@1234")) {
+					System.out.println("Invalid Admin password");
+				} else if (resultSet.getString("email").equals(
+						"hr@chainsys.com")
+						&& resultSet.getString("password").equals("hr@1234")) {
+					Hr.call();
+				}
+
+				else if (resultSet.getString("email").equals("hr@chainsys.com")
+						&& !resultSet.getString("password").equals("hr@1234")) {
+					System.out.println("Invalid Admin password");
+				}
+
+			} else {
+				System.out.println("account not found");
 			}
 
 		} catch (SQLException e) {
@@ -132,7 +110,7 @@ public class Functionalites {
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT INTO ev_employee values(?,?,?,?)");
+					.prepareStatement("INSERT INTO EV_EMPLOYEE values(?,?,?,?)");
 			preparedStatement.setInt(1, employee.getId());
 			preparedStatement.setString(2, employee.getName());
 			preparedStatement.setString(3, employee.getEmail());
@@ -147,36 +125,18 @@ public class Functionalites {
 
 	}
 
-	public static void insertDepartment(String name, int manager_Id,
-			int location_Id) throws Exception {
-		// TODO Auto-generated method stub
-		try {
-			Connection connection = ConnectionUtil.getConnection();
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("Insert into chainsys_departments values(CHAINSYSDEPARTMENTS_DEPTID_SEQ.nextval,?,?,?)");
-			preparedStatement.setString(1, name);
-			preparedStatement.setInt(2, manager_Id);
-			preparedStatement.setInt(3, location_Id);
-			preparedStatement.executeUpdate();
-			ConnectionUtil.close(connection, preparedStatement, null);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			throw new Exception("Unable to Insert Department");
-		}
-
-	}
-
 	public static void addTopic(Topics topic) throws Exception {
 		// TODO Auto-generated method stub
 
-		String sql = "INSERT INTO ev_topics VALUES(EV_TOPICS_ID_SEQ.nextval,?)";
+		String sql = "INSERT INTO EV_TOPICS(name) VALUES(?)";
 
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
 					.prepareStatement(sql);
 			preparedStatement.setString(1, topic.getName());
+			preparedStatement.executeUpdate();
+			ConnectionUtil.close(connection, preparedStatement, null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -187,7 +147,7 @@ public class Functionalites {
 
 	public static ArrayList<Topics> findTopics() throws Exception {
 
-		String sql = "SELECT id,name FROM ev_topics";
+		String sql = "SELECT topicid,name FROM EV_TOPICS";
 
 		try {
 			ArrayList<Topics> topicList = new ArrayList<>();
@@ -199,12 +159,13 @@ public class Functionalites {
 			while (resultSet.next()) {
 
 				Topics topic = new Topics();
-				topic.setId(resultSet.getInt("id"));
+				topic.setId(resultSet.getInt("topicid"));
 				topic.setName(resultSet.getString("name"));
-
 				topicList.add(topic);
+
 			}
 			return topicList;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("No Record Found");
@@ -212,32 +173,18 @@ public class Functionalites {
 
 	}
 
-	//
-	// public static void displayAll() {
-	// // TODO Auto-generated method stub
-	// ArrayList<Employee> employeeList=new ArrayList<>();
-	// for (Employee e : employeeList) {
-	// System.out.println(e.getId() + " " + e.getFirstName() + " "
-	// + e.getLastName() + " " + e.getPhoneNumber() + " "
-	// + e.getHireDate() + " " + e.getJobId() + " "
-	// + e.getSalary() + " " + e.getDeptId() + " "
-	// + e.getManagerId() + " " + e.getDateOfBirth() + " "
-	// + e.getGender());
-	// }
-	// }
-
 	public static void displayTopics(ArrayList<Topics> topicList) {
 		// TODO Auto-generated method stub
 
 		for (Topics topic : topicList) {
-			System.out.println("ID" + "   " + "TOPIC");
-			System.out.println(topic.getId() + " " + topic.getName());
+			System.out.println("ID" + "    " + "TOPIC");
+			System.out.println(topic.getId() + "    " + topic.getName());
 		}
 
 	}
 
 	public static void updateTopic(Topics topic) throws Exception {
-		String sql = "UPDATE ev_topics SET name=? WHERE id=? ";
+		String sql = "UPDATE EV_TOPICS SET name=? WHERE topicid=? ";
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
@@ -252,18 +199,21 @@ public class Functionalites {
 		}
 	}
 
-	public static void newStatus(EmployeeTopics employeeTopics) throws Exception {
+	public static void newStatus(EmployeeTopics employeeTopics)
+			throws Exception {
 		// TODO Auto-generated method stub
-		String sql = "INSERT INTO ev_employeetopics values(ev_employeetopics_id_seq.nextval,?,(SELECT topicid FROM ev_topics WHERE name=?),(SELECT id FROM ev_status where id=?),?,?,)";
-		
+		String sql = "INSERT INTO EV_EMPLOYEETOPICS(empid,topicid,statusid,createdon,modifiedon) values(?,(SELECT topicid FROM EV_TOPICS WHERE name=?),?,?,?)";
+
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
 					.prepareStatement(sql);
 			preparedStatement.setInt(1, employeeTopics.employee.getId());
 			preparedStatement.setString(2, employeeTopics.topic.getName());
-			preparedStatement.setInt(3,employeeTopics.status.getId());
-			preparedStatement.setTimestamp(4,Timestamp.valueOf(employeeTopics.getCreatedOn()));
+			preparedStatement.setInt(3, employeeTopics.status.getId());
+			preparedStatement.setTimestamp(4,
+					Timestamp.valueOf(employeeTopics.getCreatedOn()));
+			preparedStatement.setTimestamp(5, null);
 			preparedStatement.executeUpdate();
 			ConnectionUtil.close(connection, preparedStatement, null);
 		} catch (SQLException e) {
@@ -272,60 +222,88 @@ public class Functionalites {
 		}
 	}
 
-	public static void updateStatus(EmployeeTopics employeeTopics) throws Exception {
+	public static void updateStatus(EmployeeTopics employeeTopics)
+			throws Exception {
 		// TODO Auto-generated method stub
-		String sql = "UPDATE ev_employeetopics modifiedon=? WHERE empid=? AND topicid=(SELECT topicid FROM ev_topics WHERE name=?) ";
+		String sql = "UPDATE EV_EMPLOYEETOPICS modifiedon=? WHERE empid=? AND topicid=(SELECT topicid FROM EV_TOPICS WHERE name=?) ";
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
 					.prepareStatement(sql);
-			preparedStatement.setTimestamp(1,Timestamp.valueOf(employeeTopics.getUpdatedOn()));
-			preparedStatement.setInt(2,employeeTopics.employee.getId());
-			preparedStatement.setString(3,employeeTopics.topic.getName());
+			preparedStatement.setTimestamp(1,
+					Timestamp.valueOf(employeeTopics.getUpdatedOn()));
+			preparedStatement.setInt(2, employeeTopics.employee.getId());
+			preparedStatement.setString(3, employeeTopics.topic.getName());
 			preparedStatement.executeUpdate();
 			ConnectionUtil.close(connection, preparedStatement, null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("Unable to update");
 		}
-		
+
 	}
 
-	public static ArrayList<EmployeeTopics> selectEmployeeEvaluation() throws Exception {
+	public static ArrayList<EmployeeTopics> selectEmployeeEvaluation()
+			throws Exception {
 		// TODO Auto-generated method stub
-		ArrayList<EmployeeTopics> employeeTopicsList=new ArrayList<>();
-		String sql = "SELECT id,empid,topicid,statusid,createdon,modifiedon FROM ev_employeetopics ";
+		ArrayList<EmployeeTopics> employeeTopicsList = new ArrayList<>();
+		String sql = "SELECT et.id,e.id ,e.name,t.name,s.name,et.createdon,et.modifiedon FROM EV_EMPLOYEETOPICS et JOIN EV_EMPLOYEE e ON et.empid=e.id JOIN EV_TOPICS t ON et.topicid=t.topicid JOIN EV_STATUS s ON et.statusid=s.id;";
 		try {
 			Connection connection = ConnectionUtil.getConnection();
 			PreparedStatement preparedStatement = connection
 					.prepareStatement(sql);
-			
-			ResultSet resultSet=preparedStatement.executeQuery();
-			while(resultSet.next())
-			{
-				EmployeeTopics employeeTopics=new EmployeeTopics();
-				employeeTopics.employee=new Employee();
-				employeeTopics.topic=new Topics();
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				EmployeeTopics employeeTopics = new EmployeeTopics();
+				employeeTopics.employee = new Employee();
+				employeeTopics.topic = new Topics();
+				employeeTopics.status = new Status();
 				employeeTopics.setId(resultSet.getInt("id"));
-				employeeTopics.employee.setId(resultSet.getInt("empid"));
-				employeeTopics.topic.setId(resultSet.getInt("topicid"));
-				employeeTopics.status.setId(resultSet.getInt("statusid"));
-				employeeTopics.setCreatedOn(resultSet.getTimestamp("createdon").toLocalDateTime());
-				employeeTopics.setUpdatedOn(resultSet.getTimestamp("modifiedon").toLocalDateTime());
+				employeeTopics.employee.setId(resultSet.getInt("e.id"));
+				employeeTopics.employee.setName(resultSet.getString("e.name"));
+				employeeTopics.topic.setName(resultSet.getString("t.name"));
+				employeeTopics.status.setName(resultSet.getString("s.name"));
+				employeeTopics.setCreatedOn(resultSet.getTimestamp("createdon")
+						.toLocalDateTime());
+				if (resultSet.getObject("modifiedon") != null) {
+					employeeTopics.setUpdatedOn(resultSet.getTimestamp(
+							"modifiedon").toLocalDateTime());
+				} else {
+					employeeTopics.setUpdatedOn(null);
+				}
 				employeeTopicsList.add(employeeTopics);
+
 			}
 			ConnectionUtil.close(connection, preparedStatement, null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("Unable to update");
 		}
-		
+		for (EmployeeTopics employeeTopics : employeeTopicsList) {
+			System.out.println(employeeTopics.getId());
+			System.out.println(employeeTopics.getCreatedOn());
+		}
 		return employeeTopicsList;
 	}
 
 	public static void displayEmployeeEvaluation(
 			ArrayList<EmployeeTopics> employeeTopicsList) {
 		// TODO Auto-generated method stub
-		System.out.println("SNO"+" "+"EMPLOYEE ID"+" "+"EMPLOYEE NAME"+" "+"TOPIC NAME"+" "+"STATUS"+" "+"STARTED"+" "+"LAST UPDATE");
+		System.out.println("SNO" + " " + "EMPLOYEE ID" + " " + "EMPLOYEE NAME"
+				+ " " + "TOPIC NAME" + " " + "STATUS" + " " + "STARTED" + " "
+				+ "LAST UPDATE");
+		for (EmployeeTopics employeeTopics : employeeTopicsList) {
+			System.out.println(employeeTopics.getId() + " "
+					+ employeeTopics.employee.getId() + " "
+					+ employeeTopics.employee.getName() + " "
+					+ employeeTopics.topic.getName() + " "
+					+ employeeTopics.status.getName() + " "
+					+ employeeTopics.getCreatedOn() + " "
+					+ employeeTopics.getUpdatedOn());
+
+		}
 	}
+	
+	
 }
